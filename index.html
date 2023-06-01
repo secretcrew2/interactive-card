@@ -42,7 +42,7 @@
         <div class="translate-x-8 relative">
           <img src="images/bg-card-back.png" alt="">
           <div class="absolute left-0 top-0 bottom-0 right-0 p-8 flex items-center justify-end">
-            <p class="text-xs text-white">{{ cvc }}</p>
+            <p class="text-xs text-white">{{ cvcF() }}</p>
           </div>
         </div>
         <div class="-translate-x-8 -translate-y-16 relative">
@@ -56,10 +56,10 @@
               </div>
             </div>
             <div class="space-y-2">
-              <p class="text-white tracking-wide text-lg">{{ cardnumber }}</p>
+              <p class="text-white tracking-wide text-lg">{{ cardNumber() }}</p>
               <div class="flex justify-between">
-                <p class="text-xs text-white uppercase opacity-80">{{ cardName }}</p>
-                <p class="text-xs text-white uppercase opacity-80">{{month}}/{{years}}</p>
+                <p class="text-xs text-white uppercase opacity-80">{{ cardName() }}</p>
+                <p class="text-xs text-white uppercase opacity-80">{{monthF()}}/{{yearF()}}</p>
               </div>
             </div>
           </div>
@@ -68,20 +68,20 @@
     </div>
     <div class="flex flex-col p-8 max-w-md mx-auto">
       <label for="" class="text-xs uppercase mb-2">Cardholder Name</label>
-      <input class="mb-4 text-sm p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" id="" placeholder="e.g Jane Appleseed">
+      <input v-model="cardholder" class="mb-4 text-sm p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" id="" placeholder="e.g Jane Appleseed">
       <label for="" class="text-xs uppercase mb-2">Cardnumber</label>
-      <input class="mb-4 text-sm p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="19" placeholder="e.g 1234 5678 9123 0000">
+      <input v-model="cardnumber" class="mb-4 text-sm p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="19" placeholder="e.g 1234 5678 9123 0000">
       <div class="flex gap-3">
         <div class="w-1/2">
           <label for="" class="text-xs uppercase mb-2 block">Exp. Date (MM/YY)</label>
           <div class="flex gap-2">
-            <input class="mb-4 text-sm w-1/2 p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="2" placeholder="MM" class="w-full">
-            <input class="mb-4 text-sm w-1/2 p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="2" placeholder="YY" class="w-full">
+            <input v-model="month" class="mb-4 text-sm w-1/2 p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="2" placeholder="MM" class="w-full">
+            <input v-model="years" class="mb-4 text-sm w-1/2 p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="2" placeholder="YY" class="w-full">
           </div>
         </div>
         <div class="w-1/2">
           <label for="" class="text-xs uppercase mb-2 block">CVC</label>
-          <input class="mb-4 text-sm w-full p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="3" placeholder="e.g 123">
+          <input v-model="cvc" class="mb-4 text-sm w-full p-2 border-[1px] border-solid border-grayishViolet400 rounded-lg" type="text" pattern="[0-9]*" inputmode="numeric" maxlength="3" placeholder="e.g 123">
         </div>
       </div>
       <button class="p-2 bg-grayishViolet600 text-white rounded-lg text-sm">Confirm</button>
@@ -108,7 +108,24 @@
       },
       methods:{
         cardName(){
-          return this.cardholder.length == 0 ? 'Jane Yawa': '';
+          return this.cardholder.length == 0 ? 'Jane Appleseed': this.cardholder;
+        },
+        cardNumber(){
+          if(!this.cardnumber){
+            return '0000 0000 0000 0000';
+          } else {
+            this.cardnumber = this.cardnumber.replace(/\D/g, '').replace(/^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g, '$1 $2 $3 $4')
+            return this.cardnumber;
+          }
+        },
+        monthF(){
+          return !this.month ? '00' : this.month
+        },
+        yearF(){
+          return !this.years ? '00' : this.years
+        },
+        cvcF(){
+          return !this.cvc ? '000' : this.cvc
         }
       }
     }).mount('#app')
